@@ -21,10 +21,15 @@ def get_concerta_prices_alfabeta():
             if description_cell and price_cell:
                 description = description_cell.get_text(strip=True)
                 price = price_cell.get_text(strip=True).replace("$", "").replace(",", "")  # Remove currency symbol and commas
+                price = float(price) * 1000  # Fix price scaling for Alfabeta
+                
+                # Standardize presentation format (remove "LP")
+                description = description.replace("LP", "").strip()
+                
                 prices.append({
                     "product": "Concerta",
                     "presentation": description,
-                    "price": float(price),
+                    "price": price,
                     "source": "Alfabeta"
                 })
 
@@ -42,10 +47,15 @@ def get_concerta_prices_kairos():
     for presentacion in presentaciones:
         description = presentacion.find("h5", class_="ttl-pres").text.strip()
         price = presentacion.find("div", class_="precio").text.strip().replace("$", "").replace(",", "")  # Remove currency symbol and commas
+        price = float(price)
+        
+        # Standardize presentation format (remove "LP")
+        description = description.replace("LP", "").strip()
+        
         prices.append({
             "product": "Concerta",
             "presentation": description,
-            "price": float(price),
+            "price": price,
             "source": "Kairos"
         })
 
@@ -64,10 +74,15 @@ def get_concerta_prices_preciosderemedios():
         product = "Concerta"  # Product is fixed for this query
         presentation = row.find_all("td")[1].text.strip()
         price = row.find_all("td")[2].text.strip().replace("$", "").replace(",", "")  # Remove currency symbol and commas
+        price = float(price)
+        
+        # Standardize presentation format (remove "LP")
+        presentation = presentation.replace("LP", "").strip()
+        
         prices.append({
             "product": product,
             "presentation": presentation,
-            "price": float(price),
+            "price": price,
             "source": "Precios de Remedios"
         })
 
